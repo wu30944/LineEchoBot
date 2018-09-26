@@ -45,7 +45,7 @@ class LineBotController extends Controller
       
     $signature = $req->getHeader('X-Line-Signature');
     if (empty($signature)) {
-      return $res->withStatus(400, 'Bad Request');
+      return $req->withStatus(400, 'Bad Request');
     }
     $this->bot = resolve('LINE\LINEBot');
     Log::info("Get Request");

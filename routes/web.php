@@ -11,10 +11,10 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'JiebaController@index');
 
 Route::get('/.well-known/acme-challenge/{filename}','AcmeController');
 
 Route::post('/callback','LineBotController');
+
+Route::post('/jieba-process', 'JiebaController@jiebaProcess');

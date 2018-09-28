@@ -41,14 +41,6 @@ class LineBotService
         return $this->lineBot->pushMessage($this->lineUserId, $content);
     }
 
-    public function getEvent(ServerRequestInterface $req,$signature){
-        return  $this->bot->parseEventRequest($req->getBody(), $signature);
-    }
-
-    public function getSignature(ServerRequestInterface $req){
-        $signature= $req->getHeader('X-Line-Signature');
-        return $signature[0];
-    }
 
 
 }

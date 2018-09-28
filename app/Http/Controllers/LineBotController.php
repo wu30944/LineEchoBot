@@ -30,8 +30,6 @@ use App\Controllers\StickerMessageEventHandler;
 use App\Controllers\ImageMessageEventHandler;
 use GuzzleHttp\Client;
 
-use APP\Services\LineBotService;
-
 
 class LineBotController extends Controller
 {
@@ -49,7 +47,7 @@ class LineBotController extends Controller
     if (empty($signature)) {
       return $res->withStatus(400, 'Bad Request');
     }
-    $this->bot =app(LineBotService::class);
+    $this->bot = resolve('LINE\LINEBot');
     Log::info("Get Request");
     // Check request with signature and parse request
     try {

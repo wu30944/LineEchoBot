@@ -30,8 +30,6 @@ use App\Controllers\StickerMessageEventHandler;
 use App\Controllers\ImageMessageEventHandler;
 use GuzzleHttp\Client;
 
-use APP\Services\LineBotService;
-
 
 class LineBotController extends Controller
 {
@@ -47,13 +45,13 @@ class LineBotController extends Controller
       
     $signature = $req->getHeader('X-Line-Signature');
     if (empty($signature)) {
-      return $req->withStatus(400, 'Bad Request');
+      return $res->withStatus(400, 'Bad Request');
     }
-    $this->bot =  app(LineBotService::class);//resolve('LINE\LINEBot');
+    $this->bot = resolve('LINE\LINEBot');
     Log::info("Get Request");
     // Check request with signature and parse request
     try {
-        $events = $this->bot->getEvent($req,$signature[0]);
+        $events = $this->bot->parseEventRequest($req->getBody(), $signature[0]);
     } catch (InvalidSignatureException $e) {
       return $req->withStatus(400, 'Invalid signature');
     } catch (InvalidEventRequestException $e) {
@@ -105,68 +103,6 @@ class LineBotController extends Controller
     ->header('Content-Type', 'text/plain');
   }
 
-//    public function __invoke(ServerRequestInterface $req){
-//
-//        $signature = $req->getHeader('X-Line-Signature');
-//        if (empty($signature)) {
-//            return $req->withStatus(400, 'Bad Request');
-//        }
-//        $this->bot =  app(LineBotService::class);//resolve('LINE\LINEBot');
-//        Log::info("Get Request");
-//        // Check request with signature and parse request
-//        try {
-//            $events = $this->bot->parseEventRequest($req->getBody(), $signature[0]);
-//        } catch (InvalidSignatureException $e) {
-//            return $req->withStatus(400, 'Invalid signature');
-//        } catch (InvalidEventRequestException $e) {
-//            return $req->withStatus(400, "Invalid event request");
-//        }
-//
-//        foreach ($events as $event) {
-//
-//            //接收到圖檔訊訊
-//            if($event instanceof MessageEvent) {
-//                Log::info('MessageEvent');
-//                if ($event instanceof TextMessage) {
-//                    $handler = new TextMessageEventHandler($this->bot, $req, $event);
-//                }elseif($event instanceof ImageMessage){
-//                    Log::info('ImageMessage');
-//                    $handler = new ImageMessageEventHandler($this->bot, $req, $event);
-//                }elseif($event instanceof LocationMessage){
-//                    Log::info('LocationMessage');
-//                }elseif($event instanceof AudioMessage){
-//
-//                }elseif($event instanceof VideoMessage){
-//
-//                }elseif($event instanceof StickerMessage ){
-//                    $handler = new StickerMessageEventHandler($this->bot, $req, $event);
-//                }
-//
-//            } elseif ($event instanceof UnfollowEvent) {
-//
-//            } elseif ($event instanceof FollowEvent) {
-//
-//            } elseif ($event instanceof JoinEvent) {
-//
-//            } elseif ($event instanceof LeaveEvent) {
-//
-//            } elseif ($event instanceof PostbackEvent) {
-//                $handler = new PostbackEventHandler($this->bot,$req, $event);
-//            } elseif ($event instanceof BeaconDetectionEvent) {
-//
-//            } elseif ($event instanceof UnknownEvent) {
-//
-//            } else {
-//                //無法預期的行為
-//                continue;
-//            }
-//        }
-//
-//        $handler->handle();
-//        return response('OK', 200)
-//            ->header('Content-Type', 'text/plain');
-//    }
-
   //API測試push功能，取得一個短的toker
   public function getAccessToken()
   {
@@ -174,7 +110,7 @@ class LineBotController extends Controller
       $postData =[
         'form_params' => [
         'grant_type' => 'client_credentials',
-        'client_id' => env("LINEBOT_USER_ID"),
+        'client_id' => env("LINEBOT_CHANNEL_ID"),
         'client_secret' => env("LINEBOT_CHANNEL_SECRET"),
         ],  
       ];

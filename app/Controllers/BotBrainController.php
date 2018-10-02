@@ -90,15 +90,8 @@ class BotBrainController extends Memorize
       }
       $bandServe = new BandServeController($strDutyType,$strTime);
       $replyMessage = $bandServe->getCondictionData();
-    return  ['text'=>array(
-        array(
-            'type' => 'text',
-            'text' => $userText.'讓我查一下…',
-        ),
-        array(
-            'type' => 'text',
-            'text' => '以下為'.$strTime.'服事人員 :'.$replyMessage,
-        ))];
+    return  ['text'=>'讓我查一下......
+                      '.$replyMessage];
 
   }
 

@@ -11,6 +11,12 @@ namespace App\Http\Controllers;
 use Fukuball\Jieba\Jieba;
 use Fukuball\Jieba\Finalseg;
 use Illuminate\Http\Request;
+use Fukuball\Jieba\Posseg;
+use Fukuball\Jieba\JiebaAnalyse;
+use Illuminate\Support\Facades\Redis;
+use App\Handler\LuisHandler;
+use Symfony\Component\Debug\Debug;
+use App\Controllers\BandServeController;
 
 class JiebaController extends Controller
 {
@@ -43,7 +49,38 @@ class JiebaController extends Controller
      */
     public function index()
     {
-        return view('welcome');
+        return view('Welcome');
+        $json = file_get_contents('https://spreadsheets.google.com/feeds/list/11ikBGVGKRN_zyoCJ4XRlBa0ye_cQ4tPMogVMRVRT-_I/od6/public/values?alt=json');
+        $data = json_decode($json);
+//        $result = $data;
+//        echo $json;
+        $rows = $data->{'feed'}->{'entry'};
+//        foreach($rows as $row) {
+//            echo '<p>';
+//            $date = $row->{'gsx$日期'}->{'$t'};
+//            $primarySing = $row->{'gsx$領唱'}->{'$t'};
+//            $piano = $row->{'gsx$鋼琴'}->{'$t'};
+//            $bass = $row->{'gsx$bass'}->{'$t'};
+//            $guitar = $row->{'gsx$吉他'}->{'$t'};
+//            $drum = $row->{'gsx$鼓'}->{'$t'};
+//            $assistantSing = $row->{'gsx$配唱'}->{'$t'};
+//            echo '日期：'.$date.' 領唱:'.$primarySing .' 鋼琴：'.$piano. ' BASS:' . $bass . ' 吉他：'.$guitar.' 鼓：'.$drum .' 配唱：'.$assistantSing;
+//            echo '</p>';
+//        }
+        $strGuitar = '吉他';
+        foreach ($rows as $item) {
+//            $keywords = explode(',', $item['gsx$keyword']['$t']);
+            if ($item->{'gsx$日期'}->{'$t'} == '2018-10-07') {
+                if($strGuitar=="ALL"){
+                    return $item->{'gsx$ALL'}->{'$t'};
+                }else{
+                    return $item->{'gsx$'.$strGuitar}->{'$t'};
+                }
+            }
+        }
+
+
+        return 1;
     }
 
     /**
@@ -54,20 +91,33 @@ class JiebaController extends Controller
     public function jiebaProcess(Request $request)
     {
 
-        ini_set('memory_limit', '600M');
 
         $paragraph = $request->input('paragraph');
 
-        Jieba::init(array(
-            'mode'=>'default',
-            'dict'=>'samll'
-        ));
-        Finalseg::init();
+        $handlerLius = new LuisHandler();
+        $handlerLius->getAnalyzeResult($paragraph);
+        if($handlerLius->getTopScoringIntent()=="詢問服事人員"){
 
-        $seg_list = Jieba::cut($paragraph);
-        $paragraph_processed = implode(' / ', $seg_list);
+            $strDutyType = $handlerLius->getEntity('職務類型');
+            $strTime = $handlerLius->getEntity('時間');
 
-        return $paragraph_processed;
+            if(empty($strDutyType)){
+                $strDutyType="";
+            }
+            if(empty($strTime)){
+                $strTime="";
+            }
+            $bandServe = new BandServeController($strDutyType,$strTime);
+            $replyMessage = $bandServe->getCondictionData();
+
+            echo $replyMessage;
+
+        }
+
+
+
+        return $handlerLius->getTopScoringIntent().$handlerLius->getEntity('職務類型');
+
 
     }
 }

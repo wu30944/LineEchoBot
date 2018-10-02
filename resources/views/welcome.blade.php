@@ -61,7 +61,7 @@
             <form id="jieba-process-form" name="jieba_process_form" accept-charset="utf-8" action="/jieba-process" method="post">
                 <input type="hidden" id="_token" name="_token" value="{{ csrf_token() }}">
                 <div class="form-group">
-                    <textarea style="font-size: 30px;line-height: 50px;" class="form-control col-xs-12 col-sm-12 col-md-12 col-lg-12" id="paragraph" name="paragraph" placeholder="請輸入要斷詞的短文，限140字短文" rows="5">怜香惜玉也得要看对象啊！</textarea>
+                    <textarea style="font-size: 30px;line-height: 50px;" class="form-control col-xs-12 col-sm-12 col-md-12 col-lg-12" id="paragraph" name="paragraph" placeholder="請輸入要斷詞的短文，限140字短文" rows="5">請問本週領唱是誰！</textarea>
                     <div class="help-block hide">
                         請輸入 1~140 字的短文
                     </div>
@@ -70,7 +70,7 @@
                     <h4 class="pull-right" style="margin-top: 20px;">
                         <span id="paragraph-char-counter">140</span> characters remaining
                     </h4>
-                    <button id="jieba-process-submit-btn" class="btn btn-primary btn-lg" type="submit" style="margin-top: 20px;">
+                    <button id="jieba-process-submit-btn" class="btn btn-primary btn-lg" type="submit" style="margin-top: 20px;" >
                         取得斷詞結果
                     </button>
                 </div>
@@ -105,72 +105,15 @@
 <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
 <script src="/js/jquery.form.js"></script>
 <script src="/js/jquery.simplyCountable.js"></script>
-<script>
-    $(document).ready(function(){
+<script src="https://pulipulichen.github.io/jieba-js/require-jieba-js.js"></script>
 
-        $('#paragraph').simplyCountable({
-            counter: '#paragraph-char-counter',
-            countType:          'characters',
-            maxCount:           140,
-            strictMax:          true,
-            countDirection:     'down',
-            safeClass:          'safe',
-            overClass:          'over',
-            thousandSeparator:  ',',
-            onOverCount:        function(count, countable, counter){},
-            onSafeCount:        function(count, countable, counter){},
-            onMaxCount:         function(count, countable, counter){}
+<script>
+
+    function call_jieba(){
+        call_jieba_cut($('#paragraph').val(), function (_result) {
+            console.log(_result);
         });
-
-        function jiebaProcessValidate(formData, jqForm, options) {
-
-            var is_validated = true;
-
-            if (!$('#paragraph').val() || $('#paragraph').val().length>140) {
-                $('#paragraph').parent().addClass('has-error');
-                $('#paragraph').next().removeClass('hide');
-                is_validated = false;
-            } else {
-                $('#paragraph').parent().removeClass('has-error');
-                $('#paragraph').next().addClass('hide');
-            }
-
-            if (is_validated) {
-                $('#jieba-process-submit-btn').attr("disabled", "disabled");
-            }
-
-            return is_validated;
-
-        }// end function jiebaProcessValidate
-
-        // prepare Options Object
-        var options = {
-            target:       '#jieba-result-block',
-            url:          '/jieba-process',
-            type:         'post',
-            beforeSubmit: jiebaProcessValidate,
-            success: function() {
-                if ($('#jieba-result-block').hasClass('hide')) {
-                    $('#jieba-result-h').removeClass('hide');
-                    $('#jieba-result-block').removeClass('hide');
-                }
-                $('#jieba-process-submit-btn').removeAttr("disabled");
-            }
-        };
-
-        // pass options to ajaxForm
-        $('#jieba-process-form').ajaxForm(options);
-
-    });
-</script>
-<script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-41911929-5', 'auto');
-    ga('send', 'pageview');
+    }
 </script>
 </body>
 </html>

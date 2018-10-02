@@ -110,7 +110,7 @@ class LineBotController extends Controller
       $postData =[
         'form_params' => [
         'grant_type' => 'client_credentials',
-        'client_id' => env("LINEBOT_CHANNEL_ID"),
+        'client_id' => env("LINEBOT_USER_ID"),
         'client_secret' => env("LINEBOT_CHANNEL_SECRET"),
         ],  
       ];

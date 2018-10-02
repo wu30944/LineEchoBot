@@ -13,6 +13,7 @@
         "laravel/tinker": "~1.0",
         "linecorp/line-bot-sdk": "1.5.0",
         "monolog/monolog": "^1.23",
+        "predis/predis": "^1.1",
         "symfony/psr-http-message-bridge": "^1.0",
         "zendframework/zend-diactoros": "^1.6"
     },

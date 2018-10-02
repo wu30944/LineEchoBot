@@ -11,6 +11,8 @@ use App\Controllers\Memorize;
 use Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Controllers\ChineseDictionary;
+use App\Handler\LuisHandler;
+use App\Controllers\BandServeController;
 
 
 class BotBrainController extends Memorize
@@ -72,13 +74,41 @@ class BotBrainController extends Memorize
    return ['image'=>["originalContentUrl"=>$originalContentUrl,"previewImageUrl"=>$previewImageUrl]];
 
   } 
-  
+
+  $handlerLius = new LuisHandler();
+  $luisResult=$handlerLius->getAnalyzeResult($userText);
+
+  if($handlerLius->getTopScoringIntent()=="詢問服事人員"){
+      $strDutyType = $handlerLius->getEntity('職務類型');
+      $strTime = $handlerLius->getEntity('時間');
+
+      if(empty($strDutyType)){
+          $strDutyType="";
+      }
+      if(empty($strTime)){
+          $strTime="";
+      }
+      $bandServe = new BandServeController($strDutyType,$strTime);
+      $replyMessage = $bandServe->getCondictionData();
+    return  ['text'=>array(
+        array(
+            'type' => 'text',
+            'text' => $userText.'讓我查一下…',
+        ),
+        array(
+            'type' => 'text',
+            'text' => '以下為'.$strTime.'服事人員 :'.$replyMessage,
+        ))];
+
+  }
+
   //只要有文字，就回傳相同的文字
   $answer = (new EchoBot($userText))->解釋();
   if(''!=$answer) return ['text'=>$answer];
 
 
   }
+
 
 
 }

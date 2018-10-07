@@ -82,7 +82,8 @@ class BotBrainController extends Memorize
    $previewImageUrl=$image_url;
    return ['image'=>["originalContentUrl"=>$originalContentUrl,"previewImageUrl"=>$previewImageUrl]];
 
-  } 
+  }
+      error_log("hello, this is a test!");
 
   $handlerLius = new LuisHandler();
   $luisResult=$handlerLius->getAnalyzeResult($userText);

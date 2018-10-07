@@ -38,8 +38,8 @@ class BotBrainController extends Memorize
   三、需回應時，丟給相應的mehtods進行model的查詢，
   有查到就吐出回應結果的存文字，查不到回傳空白。
   */
-  $answer = (new ChineseDictionary($userText))->解釋();
-  if(''!=$answer) return ['MessageBuilder' => new TextMessageBuilder($answer)];
+//  $answer = (new ChineseDictionary($userText))->解釋();
+//  if(''!=$answer) return ['MessageBuilder' => new TextMessageBuilder($answer)];
 
 
   //回傳貼圖
@@ -61,10 +61,10 @@ class BotBrainController extends Memorize
 
   //回地圖Sample
   //https://www.latlong.net/
-  if($userText=="101") { 
-    Log::info("回傳地址");
-    return ['location'=>["title"=>"台北101","address"=>"台北市信義區信義路五段7號","latitude"=>"25.033964","longitude"=>"121.564472"]];
-  }
+//  if($userText=="101") {
+//    Log::info("回傳地址");
+//    return ['location'=>["title"=>"台北101","address"=>"台北市信義區信義路五段7號","latitude"=>"25.033964","longitude"=>"121.564472"]];
+//  }
   
  if($userText=="抽") {
    //需給https的圖檔連結

@@ -93,6 +93,8 @@ class BotBrainController extends Memorize
 
 //  if($handlerLius->getIntentScore()<0.7){
   if(1==1){
+      $objMessageBuilder->setMessageBuilder(new TextMessageBuilder('test'));
+      return  ['MessageBuilder'=>$objMessageBuilder->getMessageBuilder()];
 
       $strDutyType = $handlerLius->getEntity('職務類型');
       $strTime = $handlerLius->getEntity('時間');

@@ -29,6 +29,7 @@ class BotBrainController extends Memorize
 
   public function handle($userText){
 
+      error_log("hello, this is a test!");
   //中文字典
   /*
   設計概念:
@@ -83,20 +84,15 @@ class BotBrainController extends Memorize
    return ['image'=>["originalContentUrl"=>$originalContentUrl,"previewImageUrl"=>$previewImageUrl]];
 
   }
-      error_log("hello, this is a test!");
 
   $handlerLius = new LuisHandler();
-      error_log("hello, this is error");
   $luisResult=$handlerLius->getAnalyzeResult($userText);
 
   $objMessageBuilder = new MessageBuilderService();
 
-//  Log::info($luisResult);
+  Log::info($luisResult);
 
-//  if($handlerLius->getIntentScore()<0.7){
-  if(1==1){
-      $objMessageBuilder->setMessageBuilder(new TextMessageBuilder('test'));
-      return  ['MessageBuilder'=>$objMessageBuilder->getMessageBuilder()];
+  if($handlerLius->getIntentScore()<0.7){
 
       $strDutyType = $handlerLius->getEntity('職務類型');
       $strTime = $handlerLius->getEntity('時間');

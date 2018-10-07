@@ -38,7 +38,12 @@ class PostbackEventHandler extends EventHandler
 //        error_log($data);
 ////      $dataObj = explode('|',$data);
 ////      Log::info("User:".$userId." Answer:".$dataObj[1]." question_id:".$dataObj[0]);
-      return  $this->replyText(transk('default.TalkOtherThing'));
+        if (env('APP_ENV') == 'testing')
+        {
+            return $this->pushMessage(trans('default.TalkOtherThing'));
+        }else{
+            return $this->replyMessage(trans('default.TalkOtherThing'));
+        }
 
   }
 }

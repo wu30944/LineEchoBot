@@ -88,6 +88,7 @@ class LineBotController extends Controller
           } elseif ($event instanceof LeaveEvent) {
 
           } elseif ($event instanceof PostbackEvent) {
+            error_log('test123');
              $handler = new PostbackEventHandler($this->bot,$req, $event);
           } elseif ($event instanceof BeaconDetectionEvent) {
 

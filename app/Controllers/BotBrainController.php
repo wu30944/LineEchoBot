@@ -92,7 +92,7 @@ class BotBrainController extends Memorize
   Log::info($luisResult);
 
   if($handlerLius->getIntentScore()<0.7){
-
+      error_log("hello, this is a test!");
       $strDutyType = $handlerLius->getEntity('職務類型');
       $strTime = $handlerLius->getEntity('時間');
       $strAsk = $handlerLius->getEntity('詢問');

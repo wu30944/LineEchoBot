@@ -60,14 +60,21 @@ class BandServeController
             }
 
         }
+        return str_replace('%',$this->time,trans('default.NonSunday'));
     }
 
     private function getDate($strTime)
     {
         if ($strTime == '本週' || $strTime == '當週' || $strTime == '這禮拜' || $strTime == '這次') {
             return date('Y-m-d', strtotime('next sunday', strtotime('today')));
+        }if ($strTime == '下週' || $strTime == '下次' || $strTime == '下禮拜' ) {
+             return date('Y-m-d', strtotime('next sunday', strtotime('today')));
         }else{
-            return date('Y-m-d', strtotime('next sunday', strtotime('today')));
+
+            $strTime = str_replace('-','',$strTime);
+            $strTime = str_replace('/','',$strTime);
+            $strTime = str_replace(' ','',$strTime);
+            return date('Y-m-d', strtotime($strTime));
         }
     }
 

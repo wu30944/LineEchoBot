@@ -7,6 +7,7 @@ use App\Controllers\BotBrainController;
 use App\Controllers\UpdateUserInfo;
 use Log;
 
+
 class TextMessageEventHandler extends EventHandler
 {
     protected $brain;
@@ -24,6 +25,7 @@ class TextMessageEventHandler extends EventHandler
       $userText = $this->event->getText();
 
       $arrayObj = $this->brain->handle($userText);
+
       if(is_null($arrayObj)) return null;
       /*
       Log::info('TextMessage');
@@ -32,9 +34,15 @@ class TextMessageEventHandler extends EventHandler
       Log::info('userId:'.$this->getUserId());
       */
 
-      if(array_key_exists('text',$arrayObj)){
-        Log::info("回傳文字:".$arrayObj['text']);
-        return $this->replyText($arrayObj['text']);
+      if(array_key_exists('MessageBuilder',$arrayObj)){
+//        Log::info("回傳文字:".$arrayObj['text']);
+          if (env('APP_ENV') != 'local')
+          {
+               return $this->pushMessage($arrayObj['MessageBuilder']);
+          }else{
+              return $this->replyMessage($arrayObj['MessageBuilder']);
+          }
+
       }elseif(array_key_exists('sticker',$arrayObj)){
         $obj= $arrayObj['sticker'];
         return $this->replySticker($obj['packageId'],$obj['stickerId']);

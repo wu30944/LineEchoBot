@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
-
+use LINE\LINEBot;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -18,6 +18,7 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         Schema::defaultStringLength(191);
+
     }
 
     /**
@@ -32,5 +33,8 @@ class AppServiceProvider extends ServiceProvider
         {
             $this->app->register('Barryvdh\Debugbar\ServiceProvider');
         }
+
     }
+
+
 }

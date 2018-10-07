@@ -107,6 +107,12 @@ class LuisHandler
         }
     }
 
+    function getIntentScore(){
+        if(!empty($this->luisJsonResult)){
+            return $this->luisJsonResult['topScoringIntent']['score'];
+        }
+    }
+
     function getEntity($strType){
         if(!empty($this->luisJsonResult)){
             foreach ($this->luisJsonResult['entities'] as $item){

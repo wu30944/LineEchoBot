@@ -65,6 +65,14 @@ abstract class EventHandler
       return $this->getEvent()->getReplyToken();
     }
 
+    public function replyMessage($replyMessageBuilder){
+        return $this->getBot()->replyMessage($this->getReplyToken(),$replyMessageBuilder);
+    }
+
+    public function pushMessage($replyMessageBuilder){
+        return $this->getBot()->pushMessage(env('LINEBOT_USER_ID'),$replyMessageBuilder);
+    }
+
     public function replyText($replyMessage){
         return $this->getBot()->replyText($this->getReplyToken(), $replyMessage);
     }

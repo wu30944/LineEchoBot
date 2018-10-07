@@ -18,9 +18,14 @@ use App\Handler\LuisHandler;
 use Symfony\Component\Debug\Debug;
 use App\Controllers\BandServeController;
 
+use LINE\LINEBot\Event\MessageEvent\TextMessage;
+use App\Controllers\TextMessageEventHandler;
+
 class JiebaController extends Controller
 {
 
+
+    private $bot;
     /*
         |--------------------------------------------------------------------------
         | Welcome Controller
@@ -49,7 +54,17 @@ class JiebaController extends Controller
      */
     public function index()
     {
-        return view('Welcome');
+
+        $this->bot = resolve('LINE\LINEBot');
+        $json = file_get_contents('/Users/andywu/Documents/Code/LineEchoBot/tests/TestJson/TestMessage.json');
+        $data = json_decode($json,true);
+        $objTextMessage = new TextMessage($data);
+        $handler = new TextMessageEventHandler($this->bot, '1', $objTextMessage);
+
+        $strReplyText = $handler->handle();
+        \Debug($strReplyText);
+
+        return $objTextMessage->getText();
         $json = file_get_contents('https://spreadsheets.google.com/feeds/list/11ikBGVGKRN_zyoCJ4XRlBa0ye_cQ4tPMogVMRVRT-_I/od6/public/values?alt=json');
         $data = json_decode($json);
 //        $result = $data;
@@ -110,13 +125,11 @@ class JiebaController extends Controller
             $bandServe = new BandServeController($strDutyType,$strTime);
             $replyMessage = $bandServe->getCondictionData();
 
-            echo $replyMessage;
 
         }
 
 
-
-        return $handlerLius->getTopScoringIntent().$handlerLius->getEntity('職務類型');
+        return  $replyMessage;
 
 
     }

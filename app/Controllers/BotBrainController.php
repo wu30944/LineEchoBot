@@ -8,12 +8,21 @@ use App\User;
 use App\Dictionary; //字典
 use App\Idiom; //成語
 use App\Controllers\Memorize;
+use Illuminate\Mail\Message;
 use Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Controllers\ChineseDictionary;
 use App\Handler\LuisHandler;
 use App\Controllers\BandServeController;
+use LINE\LINEBot\MessageBuilder\TemplateMessageBuilder;
+use LINE\LINEBot\MessageBuilder\TemplateBuilder\ButtonTemplateBuilder;
+use LINE\LINEBot\MessageBuilder\TemplateBuilder\ConfirmTemplateBuilder;
+use LINE\LINEBot\TemplateActionBuilder\MessageTemplateActionBuilder;
+use LINE\LINEBot\TemplateActionBuilder\PostbackTemplateActionBuilder;
+use LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder;
+use LINE\LINEBot\MessageBuilder\TextMessageBuilder;
 
+use App\Services\MessageBuilderService;
 
 class BotBrainController extends Memorize
 {
@@ -29,7 +38,7 @@ class BotBrainController extends Memorize
   有查到就吐出回應結果的存文字，查不到回傳空白。
   */
   $answer = (new ChineseDictionary($userText))->解釋();
-  if(''!=$answer) return ['text'=>$answer];
+  if(''!=$answer) return ['MessageBuilder' => new TextMessageBuilder($answer)];
 
 
   //回傳貼圖
@@ -78,21 +87,64 @@ class BotBrainController extends Memorize
   $handlerLius = new LuisHandler();
   $luisResult=$handlerLius->getAnalyzeResult($userText);
 
-  if($handlerLius->getTopScoringIntent()=="詢問服事人員"){
+  $objMessageBuilder = new MessageBuilderService();
+
+  Log::info($luisResult);
+
+  if($handlerLius->getIntentScore()<0.7){
+
       $strDutyType = $handlerLius->getEntity('職務類型');
       $strTime = $handlerLius->getEntity('時間');
+      $strAsk = $handlerLius->getEntity('詢問');
 
-      if(empty($strDutyType)){
-          $strDutyType="";
-      }
-      if(empty($strTime)){
-          $strTime="";
-      }
-      $bandServe = new BandServeController($strDutyType,$strTime);
-      $replyMessage = $bandServe->getCondictionData();
-    return  ['text'=>'讓我查一下......
-                      '.$replyMessage];
+      if(empty($strDutyType) && empty($strTime) && empty($strAsk)){
+          $objMessageBuilder->setMessageBuilder(new TextMessageBuilder(str_replace('%',$userText,trans('default.NotUnderstand'))));
+      }else if(empty($strTime)){
 
+          $objMessageBuilder->setMessageBuilder(new TextMessageBuilder(trans('default.AskTimeIs')));
+
+      }
+      else if(empty($strAsk)){
+
+          $objConfirmTemplate =
+              new ConfirmTemplateBuilder(str_replace('%',$strTime.$strDutyType,trans('default.AskWhoIs')), [
+                  new MessageTemplateActionBuilder(trans('default.Yes'), str_replace('%',$strTime.$strDutyType,trans('default.Who'))),
+                  new MessageTemplateActionBuilder(trans('default.No'), str_replace('%',$strTime.$strDutyType,trans('default.Who'))),
+              ]);
+
+          $objTemplateMessageBuilder = new TemplateMessageBuilder(trans('default.Check'),$objConfirmTemplate);
+
+          $objMessageBuilder->setMessageBuilder($objTemplateMessageBuilder);
+
+      }
+
+      return  ['MessageBuilder'=>$objMessageBuilder->getMessageBuilder()];
+
+  }else{
+      $strIntent = $handlerLius->getTopScoringIntent();
+
+      if($strIntent =="詢問服事人員"){
+          $strDutyType = $handlerLius->getEntity('職務類型');
+          $strTime = $handlerLius->getEntity('時間');
+
+
+          if(empty($strDutyType)){
+              $strDutyType="";
+          }
+          if(empty($strTime)){
+              $strTime="";
+          }
+          $bandServe = new BandServeController($strDutyType,$strTime);
+          $replyMessage = $bandServe->getCondictionData();
+
+          $objMessageBuilder->setMessageBuilder(new TextMessageBuilder(trans('default.Search'),$replyMessage,trans('default.ResultMessage')));
+
+
+      }else if($strIntent=="問候"){
+          $objMessageBuilder->setMessageBuilder(new TextMessageBuilder(str_replace('%',$userText,trans('default.NotUnderstand'))));
+      }
+
+      return  ['MessageBuilder'=>$objMessageBuilder->getMessageBuilder()];
   }
 
   //只要有文字，就回傳相同的文字

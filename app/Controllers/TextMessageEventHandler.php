@@ -36,12 +36,14 @@ class TextMessageEventHandler extends EventHandler
 
       if(array_key_exists('MessageBuilder',$arrayObj)){
 //        Log::info("回傳文字:".$arrayObj['text']);
-          if (env('APP_ENV') != 'local')
-          {
-               return $this->pushMessage($arrayObj['MessageBuilder']);
-          }else{
-              return $this->replyMessage($arrayObj['MessageBuilder']);
-          }
+          return $this->replyMessage($arrayObj['MessageBuilder']);
+
+//          if (env('APP_ENV') != 'local')
+//          {
+//               return $this->pushMessage($arrayObj['MessageBuilder']);
+//          }else{
+//              return $this->replyMessage($arrayObj['MessageBuilder']);
+//          }
 
       }elseif(array_key_exists('sticker',$arrayObj)){
         $obj= $arrayObj['sticker'];

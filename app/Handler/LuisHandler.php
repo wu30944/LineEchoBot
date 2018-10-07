@@ -88,17 +88,18 @@ class LuisHandler
         // check length of key
         if (strlen($this->endpointKey) == 32) {
 
-          $json = $this->AnalyzeText($Query);
+            $json = $this->AnalyzeText($Query);
+            $this->luisJsonResult =json_decode($json,true);
+            return $this->luisJsonResult;
 
         } else {
 
             print("Invalid LUIS key!\n");
             print("Please paste yours into the source code.\n");
 
-        }
-        $this->luisJsonResult =json_decode($json,true);
 
-        return $this->luisJsonResult;
+        }
+
     }
 
     function getTopScoringIntent(){

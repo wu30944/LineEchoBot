@@ -90,11 +90,9 @@ class BotBrainController extends Memorize
   $objMessageBuilder = new MessageBuilderService();
 
 //  Log::info($luisResult);
-      error_log($handlerLius->getIntentScore());
-      file_put_contents("php://stderr", $handlerLius->getIntentScore());
-  if($handlerLius->getIntentScore()<0.7){
-      error_log("hello, this is a test!");
-      file_put_contents("php://stderr", "hello, this is a test!\n");
+
+//  if($handlerLius->getIntentScore()<0.7){
+  if(1==1){
 
       $strDutyType = $handlerLius->getEntity('職務類型');
       $strTime = $handlerLius->getEntity('時間');

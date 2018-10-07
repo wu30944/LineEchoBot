@@ -4,7 +4,7 @@ use LINE\LINEBot\Event\PostbackEvent;
 use App\Controllers\EventHandler;
 use Log;
 
-class PostbackEventHandler implements EventHandler
+class PostbackEventHandler extends EventHandler
 {
 
     public function __construct($bot, $req, PostbackEvent $event)
@@ -23,7 +23,7 @@ class PostbackEventHandler implements EventHandler
         if(property_exists($this->jsonObj->{"events"}[0]->{"source"}->{"userId"})){
             $userId=$jsonObj->{"events"}[0]->{"source"}->{"userId"};
         }
-        
+
 
         if(property_exists($jsonObj->{"events"}[0]->{"source"},'groupId')){
           $groupId=$jsonObj->{"events"}[0]->{"source"}->{"groupId"};

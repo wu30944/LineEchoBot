@@ -110,7 +110,7 @@ class BotBrainController extends Memorize
           $objConfirmTemplate =
               new ConfirmTemplateBuilder(str_replace('%',$strTime.$strDutyType,trans('default.AskWhoIs')), [
                   new MessageTemplateActionBuilder(trans('default.Yes'), str_replace('%',$strTime.$strDutyType,trans('default.Who'))),
-                  new MessageTemplateActionBuilder(trans('default.No'), str_replace('%',$strTime.$strDutyType,trans('default.Who'))),
+                  new PostbackTemplateActionBuilder(trans('default.No'), trans('default.TalkOtherThing')),
               ]);
 
           $objTemplateMessageBuilder = new TemplateMessageBuilder(trans('default.Check'),$objConfirmTemplate);

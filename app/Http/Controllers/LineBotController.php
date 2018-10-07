@@ -29,6 +29,7 @@ use App\Controllers\TextMessageEventHandler;
 use App\Controllers\StickerMessageEventHandler;
 use App\Controllers\ImageMessageEventHandler;
 use GuzzleHttp\Client;
+use App\Controllers\PostbackEventHandler;
 
 
 class LineBotController extends Controller

@@ -15,5 +15,6 @@ return [
     'Search'=>'我查詢一下',
     'ResultMessage'=>'以上是我查詢到的結果！',
     'AskTimeIs'=>'請問你是想詢問什麼時候的服事人員？',
-    'NonSunday' => '%可能不是禮拜天唷！'
+    'NonSunday' => '%可能不是禮拜天唷！',
+    'TalkOtherThing'=>'如果你還有想要問什麼就儘管問，不要害羞喔！'
 ];

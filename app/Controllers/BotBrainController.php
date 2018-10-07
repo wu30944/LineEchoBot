@@ -86,6 +86,7 @@ class BotBrainController extends Memorize
       error_log("hello, this is a test!");
 
   $handlerLius = new LuisHandler();
+      error_log("hello, this is error");
   $luisResult=$handlerLius->getAnalyzeResult($userText);
 
   $objMessageBuilder = new MessageBuilderService();

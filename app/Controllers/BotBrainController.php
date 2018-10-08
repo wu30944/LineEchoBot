@@ -101,26 +101,7 @@ class BotBrainController extends Memorize
 
       if ($handlerLius->getIntentScore() < 0.7) {
 
-
-          if (empty($strDutyType) && empty($strTime) && empty($strAsk)) {
-              $objMessageBuilder->setMessageBuilder(new TextMessageBuilder(str_replace('%', $userText, trans('default.NotUnderstand'))));
-          } else if (empty($strTime)) {
-
-              $objMessageBuilder->setMessageBuilder(new TextMessageBuilder(trans('default.AskTimeIs')));
-
-          } else if (empty($strAsk)) {
-
-              $objConfirmTemplate =
-                  new ConfirmTemplateBuilder(str_replace('%', $strTime . $strDutyType, trans('default.AskWhoIs')), [
-                      new MessageTemplateActionBuilder(trans('default.Yes'), str_replace('%', $strTime . $strDutyType, trans('default.Who'))),
-                      new PostbackTemplateActionBuilder(trans('default.No'), trans('default.TalkOtherThing')),
-                  ]);
-
-              $objTemplateMessageBuilder = new TemplateMessageBuilder(trans('default.Check'), $objConfirmTemplate);
-
-              $objMessageBuilder->setMessageBuilder($objTemplateMessageBuilder);
-
-          }
+          $objMessageBuilder->setMessageBuilder(new TextMessageBuilder(str_replace('%', $userText, trans('default.NotUnderstand'))));
 
           return ['MessageBuilder' => $objMessageBuilder->getMessageBuilder()];
 
@@ -128,20 +109,28 @@ class BotBrainController extends Memorize
           $strIntent = $handlerLius->getTopScoringIntent();
 
           if ($strIntent == "詢問服事人員") {
-              $strDutyType = $handlerLius->getEntity('職務類型');
-              $strTime = $handlerLius->getEntity('時間');
-
 
               if (empty($strDutyType)) {
-                  $strDutyType = "";
-              }
-              if (empty($strTime)) {
-                  $strTime = "";
-              }
-              $bandServe = new BandServeController($strDutyType, $strTime);
-              $replyMessage = $bandServe->getCondictionData();
+                  $objMessageBuilder->setMessageBuilder(new TextMessageBuilder(str_replace('%',$strDutyType,trans('default.AskTime'))));
 
-              $objMessageBuilder->setMessageBuilder(new TextMessageBuilder(trans('default.Search'), $replyMessage, trans('default.ResultMessage')));
+              }
+              else if (empty($strTime)) {
+                  $objConfirmTemplate =
+                      new ConfirmTemplateBuilder(str_replace('%', $strTime, trans('default.AskDuty')), [
+                          new MessageTemplateActionBuilder(trans('default.Yes'), str_replace('%', $strTime . $strDutyType, trans('default.Who'))),
+                          new PostbackTemplateActionBuilder(trans('default.No'), trans('default.TalkOtherThing')),
+                      ]);
+
+                  $objTemplateMessageBuilder = new TemplateMessageBuilder(trans('default.Check'), $objConfirmTemplate);
+
+                  $objMessageBuilder->setMessageBuilder($objTemplateMessageBuilder);
+              }else{
+                  $bandServe = new BandServeController($strDutyType, $strTime);
+                  $replyMessage = $bandServe->getCondictionData();
+
+                  $objMessageBuilder->setMessageBuilder(new TextMessageBuilder(trans('default.Search'), $replyMessage, trans('default.ResultMessage')));
+
+              }
 
 
           } else if ($strIntent == "問候") {

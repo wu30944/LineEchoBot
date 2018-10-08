@@ -18,7 +18,7 @@ class PostbackEventHandler extends EventHandler
     {
         Log::info("PostbackEvent");
         $jsonObj = json_decode($this->req->getBody());
-        error_log($jsonObj);
+        error_log($this->req->getBody());
           //回答的使用者
 //        if(property_exists($this->jsonObj->{"events"}[0]->{"source"}->{"userId"})){
 //            $userId=$jsonObj->{"events"}[0]->{"source"}->{"userId"};

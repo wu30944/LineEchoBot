@@ -23,6 +23,7 @@ class TextMessageEventHandler extends EventHandler
     {
       //使用者的文字
       $userText = $this->event->getText();
+        
 
       $arrayObj = $this->brain->handle($userText);
 

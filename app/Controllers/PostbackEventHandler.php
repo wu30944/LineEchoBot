@@ -3,6 +3,8 @@ namespace App\Controllers;
 use LINE\LINEBot\Event\PostbackEvent;
 use App\Controllers\EventHandler;
 use Log;
+use App\Services\MessageBuilderService;
+use LINE\LINEBot\MessageBuilder\TextMessageBuilder;
 
 class PostbackEventHandler extends EventHandler
 {
@@ -37,11 +39,15 @@ class PostbackEventHandler extends EventHandler
 //        error_log($data);
 ////      $dataObj = explode('|',$data);
 ////      Log::info("User:".$userId." Answer:".$dataObj[1]." question_id:".$dataObj[0]);
+        $objMessageBuilder = new MessageBuilderService();
+        $strPostback = $jsonObj->{"events"}[0]->{"postback"}->{"data"};
+        $objMessageBuilder->setMessageBuilder( new TextMessageBuilder($strPostback));
+
         if (env('APP_ENV') == 'testing')
         {
-            return $this->pushMessage(trans('default.TalkOtherThing'));
+            return $this->pushMessage($objMessageBuilder->getMessageBuilder());
         }else{
-            return $this->replyMessage(trans('default.TalkOtherThing'));
+            return $this->replyMessage($objMessageBuilder->getMessageBuilder());
         }
 
   }

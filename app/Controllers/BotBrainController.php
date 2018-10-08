@@ -46,17 +46,17 @@ class BotBrainController extends Memorize
       //回傳貼圖
       //參考連結
       //https://developers.line.me/media/messaging-api/messages/sticker_list.pdf
-      if ($userText == "讚") {
+      if ($userText == "讚" || $userText == "讚讚") {
           return ['sticker' => ["packageId" => "1", "stickerId" => "14"]];
       }
       if ($userText == "哈" || $userText == "哈哈") {
           return ['sticker' => ["packageId" => "1", "stickerId" => "100"]];
       }
-      if ($userText == "?") {
+      if ($userText == "?" || $userText == "??") {
           return ['sticker' => ["packageId" => "2", "stickerId" => "149"]];
       }
 
-      if ($userText == "再見" || $userText == "bye bye") {
+      if ($userText == "再見" || $userText == "bye bye" || $userText == "掰掰") {
           return ['sticker' => ["packageId" => "1", "stickerId" => "408"]];
       }
 

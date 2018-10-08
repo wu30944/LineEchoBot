@@ -111,12 +111,12 @@ class BotBrainController extends Memorize
           if ($strIntent == "詢問服事人員") {
 
               if (empty($strDutyType)) {
-                  $objMessageBuilder->setMessageBuilder(new TextMessageBuilder(str_replace('%',$strDutyType,trans('default.AskTime'))));
+                  $objMessageBuilder->setMessageBuilder(new TextMessageBuilder(str_replace('%',$strTime,trans('default.AskDuty'))));
 
               }
               else if (empty($strTime)) {
                   $objConfirmTemplate =
-                      new ConfirmTemplateBuilder(str_replace('%', $strTime, trans('default.AskDuty')), [
+                      new ConfirmTemplateBuilder(str_replace('%', $strDutyType, trans('default.AskTime')), [
                           new MessageTemplateActionBuilder(trans('default.Yes'), str_replace('%', $strTime . $strDutyType, trans('default.Who'))),
                           new PostbackTemplateActionBuilder(trans('default.No'), trans('default.TalkOtherThing')),
                       ]);

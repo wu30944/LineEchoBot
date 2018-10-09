@@ -29,6 +29,7 @@ use App\Controllers\TextMessageEventHandler;
 use App\Controllers\StickerMessageEventHandler;
 use App\Controllers\ImageMessageEventHandler;
 use GuzzleHttp\Client;
+use App\Controllers\PostbackEventHandler;
 
 
 class LineBotController extends Controller
@@ -87,6 +88,7 @@ class LineBotController extends Controller
           } elseif ($event instanceof LeaveEvent) {
 
           } elseif ($event instanceof PostbackEvent) {
+            error_log('test123');
              $handler = new PostbackEventHandler($this->bot,$req, $event);
           } elseif ($event instanceof BeaconDetectionEvent) {
 

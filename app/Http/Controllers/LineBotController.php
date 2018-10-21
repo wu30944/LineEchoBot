@@ -25,7 +25,7 @@ use LINE\LINEBot\Exception\InvalidSignatureException;
 use LINE\LINEBot\MessageBuilder\LocationMessageBuilder;
 
 use App\Controllers\LineTemplate;
-use App\Controllers\TextMessageEventHandler;
+use App\Handler\TextMessageEventHandler;
 use App\Handler\StickerMessageEventHandler;
 use App\Controllers\ImageMessageEventHandler;
 use GuzzleHttp\Client;

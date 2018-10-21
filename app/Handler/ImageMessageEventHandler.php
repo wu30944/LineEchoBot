@@ -1,7 +1,7 @@
 <?php
 namespace App\Controllers;
 use LINE\LINEBot\Event\MessageEvent\ImageMessage;
-use App\Controllers\EventHandler;
+use App\Handler\EventHandler;
 use Illuminate\Support\Facades\Storage;
 use GuzzleHttp\Client;
 use Log;

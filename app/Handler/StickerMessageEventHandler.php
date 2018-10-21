@@ -1,7 +1,7 @@
 <?php
-namespace App\Controllers;
+namespace App\Handler;
 use LINE\LINEBot\Event\MessageEvent\StickerMessage;
-use App\Controllers\EventHandler;
+use App\Handler\EventHandler;
 use Log;
 
 class StickerMessageEventHandler extends EventHandler

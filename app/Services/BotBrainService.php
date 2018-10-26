@@ -13,21 +13,31 @@ use App\Services\IntentActionService;
 use LINE\LINEBot\MessageBuilder\StickerMessageBuilder;
 use App\Services\StickerService;
 use Log;
+use LINE\LINEBot\Event\MessageEvent\TextMessage;
+use LINE\LINEBot\MessageBuilder\TextMessageBuilder;
 
 class BotBrainService
 {
     private $query;
 //    private $returnObj;
+    private $event;
 
-    public function __construct($strQuery)
+    public function __construct($strQuery,TextMessage $event)
     {
         $this->query  = $strQuery ;
+        $this->event = $event;
     }
 
     public function handle()
     {
 
         $strQuery = $this->query ;
+
+        if($strQuery=="userid"){
+            return ['MessageBuilder'=> new TextMessageBuilder($this->event->getUserId())];
+        }
+
+
 
         $strStickerService = new StickerService();
         $isReplySticker = $strStickerService->DecideReplyContent($strQuery);

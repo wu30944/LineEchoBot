@@ -36,7 +36,8 @@ class TextMessageEventHandler extends EventHandler
         //使用者的文字
         $userText = $this->event->getText();
 
-        $botBrainService = new BotBrainService($userText);
+        $botBrainService = new BotBrainService($userText,$this->event);
+
         $arrayObj = $botBrainService->handle();
 
         if(is_null($arrayObj)) return null;

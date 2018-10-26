@@ -25,11 +25,11 @@ use LINE\LINEBot\Exception\InvalidSignatureException;
 use LINE\LINEBot\MessageBuilder\LocationMessageBuilder;
 
 use App\Controllers\LineTemplate;
-use App\Controllers\TextMessageEventHandler;
-use App\Controllers\StickerMessageEventHandler;
+use App\Handler\TextMessageEventHandler;
+use App\Handler\StickerMessageEventHandler;
 use App\Controllers\ImageMessageEventHandler;
 use GuzzleHttp\Client;
-use App\Controllers\PostbackEventHandler;
+use App\Handler\PostbackEventHandler;
 
 
 class LineBotController extends Controller
@@ -46,7 +46,7 @@ class LineBotController extends Controller
       
     $signature = $req->getHeader('X-Line-Signature');
     if (empty($signature)) {
-      return $res->withStatus(400, 'Bad Request');
+      return $req->withStatus(400, 'Bad Request');
     }
     $this->bot = resolve('LINE\LINEBot');
     Log::info("Get Request");

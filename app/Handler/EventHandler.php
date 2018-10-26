@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Handler;
 use LINE\LINEBot\MessageBuilder\VideoMessageBuilder;
 use LINE\LINEBot\MessageBuilder\AudioMessageBuilder;
 use LINE\LINEBot\MessageBuilder\ImageMessageBuilder;

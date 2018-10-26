@@ -17,7 +17,7 @@ use LINE\LINEBot\Event\UnknownEvent;
 use LINE\LINEBot\Event\MessageEvent\UnknownMessage;
 use LINE\LINEBot\Event\MessageEvent\BaseEvent;
 
-use App\Controllers\TextMessageEventHandler;
+use App\Handler\TextMessageEventHandler;
 use LINE\LINEBot\MessageBuilder;
 use LINE\LINEBot\Event\MessageEvent\TextMessage;
 use LINE\LINEBot\MessageBuilder\TextMessageBuilder;
@@ -29,6 +29,9 @@ use LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder;
 use LINE\LINEBot\TemplateActionBuilder\MessageTemplateActionBuilder;
 use LINE\LINEBot\MessageBuilder\TemplateBuilder\ConfirmTemplateBuilder;
 use App\Controllers\LineTemplate;
+use App\Services\IntentActionService;
+use App\Handler\LuisHandler;
+
 
 
 class LineBotServiceTest extends TestCase
@@ -95,7 +98,7 @@ class LineBotServiceTest extends TestCase
 
     public function testPushConfirm(){
 
-//        $this->markTestSkipped('OK!');
+        $this->markTestSkipped('OK!');
         $json = file_get_contents('/Users/andywu/Documents/Code/LineEchoBot/tests/TestJson/TestMessage.json');
         $data = json_decode($json,true);
         $objTextMessage = new TextMessage($data);
@@ -126,5 +129,18 @@ class LineBotServiceTest extends TestCase
         $this->assertEquals(200, $strReplyText->getHTTPStatus());
     }
 
+    public function testIntentActionService(){
+
+        $json = file_get_contents('/Users/andywu/Documents/Code/LineEchoBot/tests/TestJson/TestMessage.json');
+        $data = json_decode($json,true);
+        $objTextMessage = new TextMessage($data);
+
+        $handler = new TextMessageEventHandler($this->bot, '1', $objTextMessage);
+
+        $strReplyText = $handler->handle();
+
+        $this->assertEquals(200, $strReplyText->getHTTPStatus());
+
+    }
 
 }

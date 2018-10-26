@@ -86,12 +86,12 @@ class BotBrainController extends Memorize
 
       }
 
-      $handlerLius = new LuisHandler();
-      $luisResult = $handlerLius->getAnalyzeResult($userText);
+      $handlerLius = new LuisHandler($userText);
+//      $luisResult = $handlerLius->getAnalyzeResult();
 
       $objMessageBuilder = new MessageBuilderService();
 
-      Log::info($luisResult);
+//      Log::info($luisResult);
 
       $strDutyType = $handlerLius->getEntity('職務類型');
       $strTime = $handlerLius->getEntity('時間');

@@ -8,6 +8,7 @@
 
 namespace App\Handler;
 
+use Log;
 
 
 class LuisHandler
@@ -43,7 +44,8 @@ class LuisHandler
 
     private $weeks;
 
-    public function __construct()
+
+    public function __construct($strQuery=null)
     {
          $this->appId = env('LUIS_APP_ID');
 
@@ -54,6 +56,8 @@ class LuisHandler
          $this->headers="Ocp-Apim-Subscription-Key: ";
 
          $this->weeks=$this->get_week( date('Y',strtotime('now')));
+
+         $this->luisJsonResult = $this->getAnalyzeResult($strQuery);
     }
 
 
@@ -84,12 +88,14 @@ class LuisHandler
         return $result;
     }
 
-    function getAnalyzeResult($Query){
+    private function getAnalyzeResult($strQuery){
         // check length of key
         if (strlen($this->endpointKey) == 32) {
 
-            $json = $this->AnalyzeText($Query);
+            $json = $this->AnalyzeText($strQuery);
             $this->luisJsonResult =json_decode($json,true);
+
+            Log::info($this->luisJsonResult);
             return $this->luisJsonResult;
 
         } else {
@@ -123,6 +129,13 @@ class LuisHandler
             }
         }
 
+    }
+
+    function getQuery(){
+        if(!empty($this->luisJsonResult))
+        {
+            return $this->luisJsonResult['query'];
+        }
     }
 
     private function get_week($year) {

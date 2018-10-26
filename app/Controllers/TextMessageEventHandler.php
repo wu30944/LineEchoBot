@@ -2,7 +2,7 @@
 namespace App\Controllers;
 use LINE\LINEBot\Event\MessageEvent\TextMessage;
 use LINE\LINEBot\MessageBuilder\LocationMessageBuilder;
-use App\Controllers\EventHandler;
+use App\Handler\EventHandler;
 use App\Controllers\BotBrainController;
 use App\Controllers\UpdateUserInfo;
 use Log;
@@ -46,8 +46,16 @@ class TextMessageEventHandler extends EventHandler
           }
 
       }elseif(array_key_exists('sticker',$arrayObj)){
-        $obj= $arrayObj['sticker'];
-        return $this->replySticker($obj['packageId'],$obj['stickerId']);
+          $obj= $arrayObj['sticker'];
+          if (env('APP_ENV') == 'testing')
+          {
+              return $this->pushMessage($obj['packageId'],$obj['stickerId']);
+          }else{
+
+              return $this->replySticker($obj['packageId'],$obj['stickerId']);
+          }
+
+
       }elseif(array_key_exists('location', $arrayObj)){
         Log::info("回傳地址");
         $obj = $arrayObj['location'];

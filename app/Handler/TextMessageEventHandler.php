@@ -13,6 +13,7 @@ use LINE\LINEBot\MessageBuilder\LocationMessageBuilder;
 use App\Handler\EventHandler;
 use App\Controllers\BotBrainController;
 use App\Services\BotBrainService;
+use LINE\LINEBot\MessageBuilder\TextMessageBuilder;
 use Log;
 
 
@@ -36,12 +37,15 @@ class TextMessageEventHandler extends EventHandler
         //使用者的文字
         $userText = $this->event->getText();
 
+        if($userText=="請問userid是什麼"){
+            return $this->replyMessage(new TextMessageBuilder($this->getUserId()));
+        }
+
         $botBrainService = new BotBrainService($userText);
         $arrayObj = $botBrainService->handle();
 
         if(is_null($arrayObj)) return null;
 
-        Log::Info($this->getUserId());
 
         if(array_key_exists('MessageBuilder',$arrayObj)){
 

@@ -41,6 +41,8 @@ class TextMessageEventHandler extends EventHandler
 
         if(is_null($arrayObj)) return null;
 
+        Log::Info($this->getUserId());
+
         if(array_key_exists('MessageBuilder',$arrayObj)){
 
             if (env('APP_ENV') == 'testing')
